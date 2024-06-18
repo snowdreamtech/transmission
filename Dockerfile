@@ -2,6 +2,9 @@ FROM snowdreamtech/alpine:3.20.0
 
 LABEL maintainer="snowdream <sn0wdr1am@qq.com>"
 
+ENV RPC_USER="" \
+    RPC_PASS=""
+
 RUN apk add --no-cache transmission-cli \
     transmission-daemon \
     && mkdir -p /var/lib/transmission/config/  \
