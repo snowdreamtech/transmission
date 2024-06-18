@@ -2,7 +2,9 @@ FROM snowdreamtech/alpine:3.20.0
 
 LABEL maintainer="snowdream <sn0wdr1am@qq.com>"
 
-ENV RPC_USER="" \
+ENV PEER_PORT= \
+    RPC_PORT= \
+    RPC_USER="" \
     RPC_PASS=""
 
 RUN apk add --no-cache transmission-cli \

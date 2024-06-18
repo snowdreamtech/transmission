@@ -10,6 +10,16 @@ else
     sed -i "s/\"rpc-authentication-required.*/\"rpc-authentication-required\"          : false,/g" /var/lib/transmission/config/settings.json
 fi
 
+# set RPC_PORT
+if [ -n "${RPC_PORT}" ]; then
+    sed -i "s/\"rpc-port.*/\"rpc-port\"                             : ${RPC_PORT},/g" /var/lib/transmission/config/settings.json
+fi
+
+# set PEER_PORT
+if [ -n "${PEER_PORT}" ]; then
+    sed -i "s/\"peer-port.*/\"peer-port\"                            : ${PEER_PORT},/g" /var/lib/transmission/config/settings.json
+fi
+
 # transmission
 transmission-daemon --foreground --config-dir /var/lib/transmission/config
 
