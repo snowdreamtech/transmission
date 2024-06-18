@@ -3,6 +3,8 @@ FROM snowdreamtech/alpine:3.20.0
 LABEL maintainer="snowdream <sn0wdr1am@qq.com>"
 
 ENV TRANSMISSION_WEB_CONTROL_VERSION="1.6.1-update1" \
+    PEER_PORT= \
+    RPC_PORT= \
     RPC_USER="" \
     RPC_PASS=""
 
