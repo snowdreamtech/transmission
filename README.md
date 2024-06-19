@@ -26,7 +26,7 @@ docker run -d \
   -v /path/to/incomplete:/var/lib/transmission/incomplete  \
   -v /path/to/torrents:/var/lib/transmission/torrents  \
   --restart unless-stopped \
-  snowdreamtech/transmission:latest
+  snowdreamtech/transmission:twc-latest
 ```
 
 ## Docker Compose
@@ -36,7 +36,7 @@ version: "3"
 
 services:
   transmission:
-    image: snowdreamtech/transmission:latest
+    image: snowdreamtech/transmission:twc-latest
     container_name: transmission
     environment:
       - TZ=Etc/UTC 
