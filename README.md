@@ -16,8 +16,8 @@ docker run -d \
   -e TZ=Etc/UTC \
   -e RPC_USER=admin \
   -e RPC_PASS=admin \
-  -e RPC_USER=9091 \
-  -e RPC_PASS=51413 \
+  -e RPC_PORT=9091 \
+  -e PEER_PORT=51413 \
   -p 9091:9091 \
   -p 51413:51413 \
   -p 51413:51413/udp \
