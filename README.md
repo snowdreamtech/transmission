@@ -4,14 +4,56 @@
 
 Docker Image packaging for Transmission. (amd64, arm32v6, arm32v7, arm64v8, i386, ppc64le,riscv64, s390x)
 
-# Run
+# Usage
+
+To help you get started creating a container from this image you can either use docker-compose or the docker cli.
+
+## Docker Cli
 
 ```bash
-docker run --rm snowdreamtech/transmission:latest
+docker run -d \
+  --name=transmission \
+  -e TZ=Etc/UTC \
+  -e RPC_USER=admin \
+  -e RPC_PASS=admin \
+  -e RPC_USER=9091 \
+  -e RPC_PASS=51413 \
+  -p 9091:9091 \
+  -p 51413:51413 \
+  -p 51413:51413/udp \
+  -v /path/to/config:/var/lib/transmission/config \
+  -v /path/to/downloads:/var/lib/transmission/downloads  \
+  -v /path/to/incomplete:/var/lib/transmission/incomplete  \
+  -v /path/to/torrents:/var/lib/transmission/torrents  \
+  --restart unless-stopped \
+  snowdreamtech/transmission:latest
 ```
 
+## Docker Compose
+
 ```bash
-docker run -e TZ=Asia/Shanghai --rm snowdreamtech/transmission:latest
+version: "3"
+
+services:
+  transmission:
+    image: snowdreamtech/transmission:latest
+    container_name: transmission
+    environment:
+      - TZ=Etc/UTC 
+      - RPC_USER=admin
+      - RPC_PASS=admin 
+      - RPC_PORT=9091 
+      - PEER_PORT=51413 
+    volumes:
+      - /path/to/config:/var/lib/transmission/config #optional
+      - /path/to/downloads:/var/lib/transmission/downloads 
+      - /path/to/incomplete:/var/lib/transmission/incomplete 
+      - /path/to/torrents:/var/lib/transmission/torrents 
+    ports:
+      - 9091:9091
+      - 51413:51413
+      - 51413:51413/udp
+    restart: unless-stopped
 ```
 
 # Development
