@@ -18,7 +18,9 @@ docker run -d \
   -e RPC_PASS=admin \
   -e RPC_PORT=9091 \
   -e PEER_PORT=51413 \
+  -e FLOOD_PORT=3000 \
   -p 9091:9091 \
+  -p 3000:3000 \
   -p 51413:51413 \
   -p 51413:51413/udp \
   -v /path/to/config:/var/lib/transmission/config \
@@ -26,7 +28,7 @@ docker run -d \
   -v /path/to/incomplete:/var/lib/transmission/incomplete  \
   -v /path/to/torrents:/var/lib/transmission/torrents  \
   --restart unless-stopped \
-  snowdreamtech/transmission:latest
+  snowdreamtech/transmission:flood-latest
 ```
 
 ## Docker Compose
@@ -36,7 +38,7 @@ version: "3"
 
 services:
   transmission:
-    image: snowdreamtech/transmission:latest
+    image: snowdreamtech/transmission:flood-latest
     container_name: transmission
     environment:
       - TZ=Etc/UTC 
@@ -44,6 +46,7 @@ services:
       - RPC_PASS=admin 
       - RPC_PORT=9091 
       - PEER_PORT=51413 
+      - FLOOD_PORT=3000 
     volumes:
       - /path/to/config:/var/lib/transmission/config #optional
       - /path/to/downloads:/var/lib/transmission/downloads 
@@ -51,6 +54,7 @@ services:
       - /path/to/torrents:/var/lib/transmission/torrents 
     ports:
       - 9091:9091
+      - 3000:3000
       - 51413:51413
       - 51413:51413/udp
     restart: unless-stopped
