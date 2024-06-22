@@ -21,7 +21,7 @@ if [ -n "${PEER_PORT}" ]; then
 fi
 
 # flood
-flood --host 0.0.0.0 --port "${FLOOD_PORT}" --auth none --trurl http://localhost:9091/transmission/rpc --truser "${RPC_USER}" --trpass "${RPC_PASS}" > /dev/null 2>&1 &
+flood --host 0.0.0.0 --port "${FLOOD_PORT}" --auth none --trurl "http://localhost:${RPC_PORT}/transmission/rpc" --truser "${RPC_USER}" --trpass "${RPC_PASS}" > /dev/null 2>&1 &
 
 # transmission
 transmission-daemon --foreground --config-dir /var/lib/transmission/config
