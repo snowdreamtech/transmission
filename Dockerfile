@@ -8,8 +8,8 @@ ENV TRANSMISSION_WEB_CONTROL_VERSION="1.6.1-update1" \
     RPC_USER="" \
     RPC_PASS=""
 
-RUN apk add --no-cache transmission-cli \
-    transmission-daemon \
+RUN apk add --no-cache transmission-cli=4.0.5-r2 \
+    transmission-daemon=4.0.5-r2 \
     && mkdir -p /var/lib/transmission/config/ \
     && mkdir -p /var/lib/transmission/downloads/ \
     && mkdir -p /var/lib/transmission/incomplete/ \
