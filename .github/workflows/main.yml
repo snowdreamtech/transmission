@@ -53,11 +53,11 @@ jobs:
             push: true
             tags: |
               snowdreamtech/transmission:latest
-              snowdreamtech/transmission:4.0.6
+              snowdreamtech/transmission:4.0.5
               snowdreamtech/transmission:4.0
               snowdreamtech/transmission:4
               ghcr.io/snowdreamtech/transmission:latest
-              ghcr.io/snowdreamtech/transmission:4.0.6
+              ghcr.io/snowdreamtech/transmission:4.0.5
               ghcr.io/snowdreamtech/transmission:4.0
               ghcr.io/snowdreamtech/transmission:4
              
