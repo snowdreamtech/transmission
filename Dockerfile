@@ -10,8 +10,8 @@ ENV FLOOD_PORT=3000 \
 
 RUN apk add --no-cache nodejs \
     npm \
-    transmission-cli \
-    transmission-daemon \
+    transmission-cli=4.0.5-r2 \
+    transmission-daemon=4.0.5-r2 \
     && mkdir -p /var/lib/transmission/config/  \
     && mkdir -p /var/lib/transmission/downloads/  \
     && mkdir -p /var/lib/transmission/incomplete/  \
