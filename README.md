@@ -1,61 +1,59 @@
-# Base
+# Transmission
 
-[![Base](http://dockeri.co/image/snowdreamtech/base)](https://hub.docker.com/r/snowdreamtech/base)
+[![Transmission](http://dockeri.co/image/snowdreamtech/transmission)](https://hub.docker.com/r/snowdreamtech/transmission)
 
-Docker Image packaging for Base. (amd64, arm32v5,  arm32v6, arm32v7, arm64v8, i386, mips64le, ppc64le,riscv64, s390x)
+Docker Image packaging for Transmission. (amd64, arm32v5,  arm32v6, arm32v7, arm64v8, i386, mips64le, ppc64le,riscv64, s390x)
 
 # Usage
 
 To help you get started creating a container from this image you can either use docker-compose or the docker cli.
 
+
 ## Docker Cli
 
-### Simple
-
 ```bash
 docker run -d \
-  --name=base \
-  -e TZ=Asia/Shanghai \
+  --name=transmission \
+  -e TZ=Etc/UTC \
+  -e RPC_USER=admin \
+  -e RPC_PASS=admin \
+  -e RPC_PORT=9091 \
+  -e PEER_PORT=51413 \
+  -p 9091:9091 \
+  -p 51413:51413 \
+  -p 51413:51413/udp \
+  -v /path/to/config:/var/lib/transmission/config \
+  -v /path/to/downloads:/var/lib/transmission/downloads  \
+  -v /path/to/incomplete:/var/lib/transmission/incomplete  \
+  -v /path/to/torrents:/var/lib/transmission/torrents  \
   --restart unless-stopped \
-  snowdreamtech/base:latest
-```
-
-### Advance
-
-```bash
-docker run -d \
-  --name=base \
-  -e TZ=Asia/Shanghai \
-  -v /path/to/data:/path/to/data \
-  --restart unless-stopped \
-  snowdreamtech/base:latest
+  snowdreamtech/transmission:latest
 ```
 
 ## Docker Compose
 
-### Simple
-
 ```bash
-services:
-  base:
-    image: snowdreamtech/base:latest
-    container_name: base
-    environment:
-      - TZ=Asia/Shanghai
-    restart: unless-stopped
-```
+version: "3"
 
-### Advance
-
-```bash
 services:
-  base:
-    image: snowdreamtech/base:latest
-    container_name: base
+  transmission:
+    image: snowdreamtech/transmission:latest
+    container_name: transmission
     environment:
-      - TZ=Asia/Shanghai
+      - TZ=Etc/UTC 
+      - RPC_USER=admin
+      - RPC_PASS=admin 
+      - RPC_PORT=9091 
+      - PEER_PORT=51413 
     volumes:
-      - /path/to/data:/path/to/data
+      - /path/to/config:/var/lib/transmission/config #optional
+      - /path/to/downloads:/var/lib/transmission/downloads 
+      - /path/to/incomplete:/var/lib/transmission/incomplete 
+      - /path/to/torrents:/var/lib/transmission/torrents 
+    ports:
+      - 9091:9091
+      - 51413:51413
+      - 51413:51413/udp
     restart: unless-stopped
 ```
 
@@ -63,7 +61,7 @@ services:
 
 ```bash
 docker buildx create --use --name build --node build --driver-opt network=host
-docker buildx build -t snowdreamtech/base --platform=linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/riscv64,linux/s390x . --push
+docker buildx build -t snowdreamtech/transmission --platform=linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/riscv64,linux/s390x . --push
 ```
 
 ## Reference

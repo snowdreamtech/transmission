@@ -2,16 +2,16 @@ FROM snowdreamtech/alpine:3.21.0
 
 # OCI annotations to image
 LABEL org.opencontainers.image.authors="Snowdream Tech" \
-    org.opencontainers.image.title="Base Image Based On Alpine" \
-    org.opencontainers.image.description="Docker Images for Base on Alpine. (i386, amd64, arm32v6, arm32v7, arm64, ppc64le,riscv64, s390x)" \
-    org.opencontainers.image.documentation="https://hub.docker.com/r/snowdreamtech/base" \
-    org.opencontainers.image.base.name="snowdreamtech/base:alpine" \
+    org.opencontainers.image.title="Transmission Image Based On Alpine" \
+    org.opencontainers.image.description="Docker Images for Transmission on Alpine. (i386, amd64, arm32v6, arm32v7, arm64, ppc64le,riscv64, s390x)" \
+    org.opencontainers.image.documentation="https://hub.docker.com/r/snowdreamtech/transmission" \
+    org.opencontainers.image.base.name="snowdreamtech/transmission:alpine" \
     org.opencontainers.image.licenses="MIT" \
-    org.opencontainers.image.source="https://github.com/snowdreamtech/base" \
+    org.opencontainers.image.source="https://github.com/snowdreamtech/transmission" \
     org.opencontainers.image.vendor="Snowdream Tech" \
     org.opencontainers.image.version="3.21.0" \
-    org.opencontainers.image.url="https://github.com/snowdreamtech/base"
-    
+    org.opencontainers.image.url="https://github.com/snowdreamtech/transmission"
+
 # Switch to the user
 USER root
 
@@ -24,15 +24,21 @@ ENV KEEPALIVE=1 \
     # which are port numbers less than 1024. 
     CAP_NET_BIND_SERVICE=0 
 
+ENV TRANSMISSION_VERSION=4.0.6-r0 \
+    PEER_PORT= \
+    RPC_PORT= \
+    RPC_USER="" \
+    RPC_PASS=""
+
 ARG GID=1000 \
     UID=1000  \
-    USER=base \
-    WORKDIR=/home/base
+    USER=transmission \
+    WORKDIR=/var/lib/transmission
 
 # Create a user with UID and GID
 RUN if [ "${USER}" != "root" ]; then \
     addgroup -g ${GID} ${USER}; \
-    adduser -h /home/${USER} -u ${UID} -g ${USER} -G ${USER} -s /bin/sh -D ${USER}; \
+    adduser -h ${WORKDIR} -u ${UID} -g ${USER} -G ${USER} -s /bin/sh -D ${USER}; \
     # sed -i "/%sudo/c ${USER} ALL=(ALL:ALL) NOPASSWD:ALL" /etc/sudoers; \
     fi
 
@@ -42,8 +48,15 @@ RUN if [ "${USER}" != "root" ] && [ "${CAP_NET_BIND_SERVICE}" -eq 1 ]; then \
     # setcap 'cap_net_bind_service=+ep' `which nginx`; \
     fi
 
-RUN apk add --no-cache \
-    vim
+COPY config /var/lib/transmission/config
+
+RUN apk add --no-cache transmission-cli=${TRANSMISSION_VERSION} \
+    transmission-daemon=${TRANSMISSION_VERSION} \
+    && mkdir -p /var/lib/transmission/config/  \
+    && mkdir -p /var/lib/transmission/downloads/  \
+    && mkdir -p /var/lib/transmission/incomplete/  \
+    && mkdir -p /var/lib/transmission/torrents/  \
+    && find / -name "*transmission*" -exec chown -Rv ${USER}:${USER} {} \; 
 
 # Switch to the user
 USER ${USER}
@@ -51,6 +64,8 @@ USER ${USER}
 # Set the workdir
 WORKDIR ${WORKDIR}
 
-COPY docker-entrypoint.sh /usr/local/bin/
+EXPOSE 9091 51413/tcp 51413/udp
+
+COPY --chown=${USER}:${USER} docker-entrypoint.sh /usr/local/bin/
 
 ENTRYPOINT ["docker-entrypoint.sh"]
