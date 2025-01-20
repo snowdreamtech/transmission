@@ -6,6 +6,8 @@ on:
     branches:
       - "main"
       - "dev"
+      - "twc"
+      - "flood"
       - "feat/**"
       - "feature/**"
       - "fix/**"
@@ -14,6 +16,8 @@ on:
     branches:
       - "main"
       - "dev"
+      - "twc"
+      - "flood"
       - "feat/**"
       - "feature/**"
       - "fix/**"
