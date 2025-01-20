@@ -30,6 +30,8 @@ ENV TRANSMISSION_VERSION=3.00-2.1+deb12u1 \
     RPC_USER="" \
     RPC_PASS=""
 
+ENV TRANSMISSION_WEB_CONTROL_VERSION=1.6.1-update1 
+
 ARG GID=1000 \
     UID=1000  \
     USER=transmission \
@@ -79,6 +81,13 @@ RUN set -eux \
     && rm -rf /tmp/* \
     && rm -rf /var/tmp/*
 
+RUN mv /usr/share/transmission/public_html/index.html /usr/share/transmission/public_html/index.original.html \ 
+    && wget https://github.com/ronggang/transmission-web-control/archive/refs/tags/v${TRANSMISSION_WEB_CONTROL_VERSION}.tar.gz \
+    && tar zxvf v${TRANSMISSION_WEB_CONTROL_VERSION}.tar.gz \ 
+    && cp -rfv transmission-web-control-${TRANSMISSION_WEB_CONTROL_VERSION}/src/*  /usr/share/transmission/public_html \ 
+    && rm -rfv v${TRANSMISSION_WEB_CONTROL_VERSION}.tar.gz \
+    && rm -rfv transmission-web-control-${TRANSMISSION_WEB_CONTROL_VERSION}
+    
 # Switch to the user
 USER ${USER}
 
