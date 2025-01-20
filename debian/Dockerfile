@@ -81,10 +81,10 @@ RUN set -eux \
     && rm -rf /tmp/* \
     && rm -rf /var/tmp/*
 
-RUN mv /usr/share/transmission/public_html/index.html /usr/share/transmission/public_html/index.original.html \ 
+RUN mv /usr/share/transmission/web/index.html /usr/share/transmission/web/index.original.html \ 
     && wget https://github.com/ronggang/transmission-web-control/archive/refs/tags/v${TRANSMISSION_WEB_CONTROL_VERSION}.tar.gz \
     && tar zxvf v${TRANSMISSION_WEB_CONTROL_VERSION}.tar.gz \ 
-    && cp -rfv transmission-web-control-${TRANSMISSION_WEB_CONTROL_VERSION}/src/*  /usr/share/transmission/public_html \ 
+    && cp -rfv transmission-web-control-${TRANSMISSION_WEB_CONTROL_VERSION}/src/*  /usr/share/transmission/web \ 
     && rm -rfv v${TRANSMISSION_WEB_CONTROL_VERSION}.tar.gz \
     && rm -rfv transmission-web-control-${TRANSMISSION_WEB_CONTROL_VERSION}
     
