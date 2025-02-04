@@ -35,8 +35,8 @@ ENV TRANSMISSION_WEB_CONTROL_VERSION=1.6.1-update1
 ENV FLOOD_AUTH=none \
     FLOOD_PORT=3000 
 
-ARG GID=1000 \
-    UID=1000  \
+ARG GID=1001 \
+    UID=1001  \
     USER=transmission \
     WORKDIR=/var/lib/transmission
 
