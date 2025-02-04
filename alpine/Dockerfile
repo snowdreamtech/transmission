@@ -1,4 +1,4 @@
-FROM snowdreamtech/alpine:3.21.0
+FROM snowdreamtech/node:18.20.1-alpine3.21
 
 # OCI annotations to image
 LABEL org.opencontainers.image.authors="Snowdream Tech" \
@@ -31,6 +31,9 @@ ENV TRANSMISSION_VERSION=4.0.6-r0 \
     RPC_PASS=""
 
 ENV TRANSMISSION_WEB_CONTROL_VERSION=1.6.1-update1 
+
+ENV FLOOD_AUTH=none \
+    FLOOD_PORT=3000 
 
 ARG GID=1000 \
     UID=1000  \
@@ -67,13 +70,15 @@ RUN mv /usr/share/transmission/public_html/index.html /usr/share/transmission/pu
     && rm -rfv v${TRANSMISSION_WEB_CONTROL_VERSION}.tar.gz \
     && rm -rfv transmission-web-control-${TRANSMISSION_WEB_CONTROL_VERSION}
 
+RUN npm install --global flood
+
 # Switch to the user
 USER ${USER}
 
 # Set the workdir
 WORKDIR ${WORKDIR}
 
-EXPOSE 9091 51413/tcp 51413/udp
+EXPOSE 3000 9091 51413/tcp 51413/udp
 
 COPY --chown=${USER}:${USER} docker-entrypoint.sh /usr/local/bin/
 

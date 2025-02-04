@@ -1,4 +1,4 @@
-FROM snowdreamtech/debian:12.8.0
+FROM snowdreamtech/node:18.19.0-bookworm
 
 # OCI annotations to image
 LABEL org.opencontainers.image.authors="Snowdream Tech" \
@@ -31,6 +31,9 @@ ENV TRANSMISSION_VERSION=3.00-2.1+deb12u1 \
     RPC_PASS=""
 
 ENV TRANSMISSION_WEB_CONTROL_VERSION=1.6.1-update1 
+
+ENV FLOOD_AUTH=none \
+    FLOOD_PORT=3000 
 
 ARG GID=1000 \
     UID=1000  \
@@ -87,14 +90,16 @@ RUN mv /usr/share/transmission/web/index.html /usr/share/transmission/web/index.
     && cp -rfv transmission-web-control-${TRANSMISSION_WEB_CONTROL_VERSION}/src/*  /usr/share/transmission/web \ 
     && rm -rfv v${TRANSMISSION_WEB_CONTROL_VERSION}.tar.gz \
     && rm -rfv transmission-web-control-${TRANSMISSION_WEB_CONTROL_VERSION}
-    
+
+RUN npm install --global flood
+
 # Switch to the user
 USER ${USER}
 
 # Set the workdir
 WORKDIR ${WORKDIR}
 
-EXPOSE 9091 51413/tcp 51413/udp
+EXPOSE 3000 9091 51413/tcp 51413/udp
 
 COPY --chown=${USER}:${USER} docker-entrypoint.sh /usr/local/bin/
 
