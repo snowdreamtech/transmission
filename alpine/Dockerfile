@@ -30,6 +30,8 @@ ENV TRANSMISSION_VERSION=4.0.6-r0 \
     RPC_USER="" \
     RPC_PASS=""
 
+ENV TRANSMISSION_WEB_CONTROL_VERSION=1.6.1-update1 
+
 ARG GID=1000 \
     UID=1000  \
     USER=transmission \
@@ -57,6 +59,13 @@ RUN apk add --no-cache transmission-cli=${TRANSMISSION_VERSION} \
     && mkdir -p /var/lib/transmission/incomplete/  \
     && mkdir -p /var/lib/transmission/torrents/  \
     && find / -name "*transmission*" -exec chown -Rv ${USER}:${USER} {} \; 
+
+RUN mv /usr/share/transmission/public_html/index.html /usr/share/transmission/public_html/index.original.html \ 
+    && wget https://github.com/ronggang/transmission-web-control/archive/refs/tags/v${TRANSMISSION_WEB_CONTROL_VERSION}.tar.gz \
+    && tar zxvf v${TRANSMISSION_WEB_CONTROL_VERSION}.tar.gz \ 
+    && cp -rfv transmission-web-control-${TRANSMISSION_WEB_CONTROL_VERSION}/src/*  /usr/share/transmission/public_html \ 
+    && rm -rfv v${TRANSMISSION_WEB_CONTROL_VERSION}.tar.gz \
+    && rm -rfv transmission-web-control-${TRANSMISSION_WEB_CONTROL_VERSION}
 
 # Switch to the user
 USER ${USER}
