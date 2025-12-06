@@ -1,64 +1,62 @@
-# Base
+# Transmission
 
-![Docker Image Version](https://img.shields.io/docker/v/snowdreamtech/base)
-![Docker Image Size](https://img.shields.io/docker/image-size/snowdreamtech/base/latest)
-![Docker Pulls](https://img.shields.io/docker/pulls/snowdreamtech/base)
-![Docker Stars](https://img.shields.io/docker/stars/snowdreamtech/base)
+![Docker Image Version](https://img.shields.io/docker/v/snowdreamtech/transmission)
+![Docker Image Size](https://img.shields.io/docker/image-size/snowdreamtech/transmission/latest)
+![Docker Pulls](https://img.shields.io/docker/pulls/snowdreamtech/transmission)
+![Docker Stars](https://img.shields.io/docker/stars/snowdreamtech/transmission)
 
-Docker Image packaging for Base. (amd64, arm32v5,  arm32v6, arm32v7, arm64v8, i386, mips64le, ppc64le,riscv64, s390x)
+Docker Image packaging for Transmission. (amd64, arm32v5,  arm32v6, arm32v7, arm64v8, i386, mips64le, ppc64le,riscv64, s390x)
 
 # Usage
 
 To help you get started creating a container from this image you can either use docker-compose or the docker cli.
 
+
 ## Docker Cli
 
-### Simple
-
 ```bash
 docker run -d \
-  --name=base \
-  -e TZ=Asia/Shanghai \
+  --name=transmission \
+  -e TZ=Etc/UTC \
+  -e RPC_USER=admin \
+  -e RPC_PASS=admin \
+  -e RPC_PORT=9091 \
+  -e PEER_PORT=51413 \
+  -p 9091:9091 \
+  -p 51413:51413 \
+  -p 51413:51413/udp \
+  -v /path/to/config:/var/lib/transmission/config \
+  -v /path/to/downloads:/var/lib/transmission/downloads  \
+  -v /path/to/incomplete:/var/lib/transmission/incomplete  \
+  -v /path/to/torrents:/var/lib/transmission/torrents  \
   --restart unless-stopped \
-  snowdreamtech/base:latest
-```
-
-### Advance
-
-```bash
-docker run -d \
-  --name=base \
-  -e TZ=Asia/Shanghai \
-  -v /path/to/data:/path/to/data \
-  --restart unless-stopped \
-  snowdreamtech/base:latest
+  snowdreamtech/transmission:latest
 ```
 
 ## Docker Compose
 
-### Simple
-
 ```bash
-services:
-  base:
-    image: snowdreamtech/base:latest
-    container_name: base
-    environment:
-      - TZ=Asia/Shanghai
-    restart: unless-stopped
-```
+version: "3"
 
-### Advance
-
-```bash
 services:
-  base:
-    image: snowdreamtech/base:latest
-    container_name: base
+  transmission:
+    image: snowdreamtech/transmission:latest
+    container_name: transmission
     environment:
-      - TZ=Asia/Shanghai
+      - TZ=Etc/UTC 
+      - RPC_USER=admin
+      - RPC_PASS=admin 
+      - RPC_PORT=9091 
+      - PEER_PORT=51413 
     volumes:
-      - /path/to/data:/path/to/data
+      - /path/to/config:/var/lib/transmission/config #optional
+      - /path/to/downloads:/var/lib/transmission/downloads 
+      - /path/to/incomplete:/var/lib/transmission/incomplete 
+      - /path/to/torrents:/var/lib/transmission/torrents 
+    ports:
+      - 9091:9091
+      - 51413:51413
+      - 51413:51413/udp
     restart: unless-stopped
 ```
 
@@ -66,7 +64,7 @@ services:
 
 ```bash
 docker buildx create --use --name build --node build --driver-opt network=host
-docker buildx build -t snowdreamtech/base --platform=linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/riscv64,linux/s390x . --push
+docker buildx build -t snowdreamtech/transmission --platform=linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/riscv64,linux/s390x . --push
 ```
 
 ## Reference
@@ -78,7 +76,7 @@ docker buildx build -t snowdreamtech/base --platform=linux/386,linux/amd64,linux
 1. [Faster Multi-Platform Builds: Dockerfile Cross-Compilation Guide](https://www.docker.com/blog/faster-multi-platform-builds-dockerfile-cross-compilation-guide/)
 1. [docker/buildx](https://github.com/docker/buildx)
 
-## Contact (备注：base)
+## Contact (备注：transmission)
 
 * Email: sn0wdr1am@qq.com
 * QQ: 3217680847
