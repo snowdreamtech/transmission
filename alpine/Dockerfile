@@ -1,4 +1,4 @@
-FROM snowdreamtech/alpine:3.22.2
+FROM snowdreamtech/nodejs:22.16.0-alpine3.22
 
 # OCI annotations to image
 LABEL org.opencontainers.image.authors="Snowdream Tech" \
@@ -54,6 +54,9 @@ ENV TRANSMISSION_VERSION=4.0.6-r4 \
     RPC_USER="" \
     RPC_PASS=""
 
+ENV FLOOD_AUTH=none \
+    FLOOD_PORT=3000 
+
 # Create a user with PUID and PGID
 RUN if [ "${USER}" != "root" ] && [ ! -d "/home/${USER}" ] && [ "${PUID}" -ne 0 ] && [ "${PGID}" -ne 0 ]; then \
     addgroup -g ${PGID} ${USER}; \
@@ -70,6 +73,7 @@ RUN apk update \
     && mkdir -p /var/lib/transmission/incomplete/  \
     && mkdir -p /var/lib/transmission/torrents/
 
+RUN npm install --global flood
 
 # Enable CAP_NET_BIND_SERVICE
 # RUN if [ "${USER}" != "root" ] && [ "${CAP_NET_BIND_SERVICE}" -eq 1 ]; then \
@@ -77,7 +81,7 @@ RUN apk update \
     # fi
 COPY config /var/lib/transmission/config
 
-EXPOSE 9091 51413/tcp 51413/udp
+EXPOSE 3000 9091 51413/tcp 51413/udp
 
 COPY entrypoint.d /usr/local/bin/entrypoint.d
 
