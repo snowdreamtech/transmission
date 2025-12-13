@@ -56,6 +56,8 @@ ENV TRANSMISSION_VERSION=4.1.0~beta2+dfsg-3+deb13u1 \
     RPC_USER="" \
     RPC_PASS=""
 
+ENV TRANSMISSION_WEB_CONTROL_VERSION=1.6.1-update1 
+
 # Create a user with PUID and PGID
 RUN if [ "${USER}" != "root" ] && [ ! -d "/home/${USER}" ] && [ "${PUID}" -ne 0 ] && [ "${PGID}" -ne 0 ]; then \
     addgroup --gid ${PGID} ${USER}; \
@@ -78,6 +80,13 @@ RUN set -eux \
     && rm -rf /tmp/* \
     && rm -rf /var/tmp/*
 
+RUN mv /usr/share/transmission/web/index.html /usr/share/transmission/web/index.original.html \ 
+    && wget https://github.com/ronggang/transmission-web-control/archive/refs/tags/v${TRANSMISSION_WEB_CONTROL_VERSION}.tar.gz \
+    && tar zxvf v${TRANSMISSION_WEB_CONTROL_VERSION}.tar.gz \ 
+    && cp -rfv transmission-web-control-${TRANSMISSION_WEB_CONTROL_VERSION}/src/*  /usr/share/transmission/web \ 
+    && rm -rfv v${TRANSMISSION_WEB_CONTROL_VERSION}.tar.gz \
+    && rm -rfv transmission-web-control-${TRANSMISSION_WEB_CONTROL_VERSION}
+    
 # Enable CAP_NET_BIND_SERVICE
 # RUN if [ "${USER}" != "root" ] && [ "${CAP_NET_BIND_SERVICE}" -eq 1 ]; then \
 #     # setcap 'cap_net_bind_service=+ep' `which nginx`; \
