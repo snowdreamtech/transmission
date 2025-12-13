@@ -9,7 +9,7 @@ LABEL org.opencontainers.image.authors="Snowdream Tech" \
     org.opencontainers.image.licenses="MIT" \
     org.opencontainers.image.source="https://github.com/snowdreamtech/transmission" \
     org.opencontainers.image.vendor="Snowdream Tech" \
-    org.opencontainers.image.version="3.0.0" \
+    org.opencontainers.image.version="4.1.0" \
     org.opencontainers.image.url="https://github.com/snowdreamtech/transmission"
     
 # Switch to the user
@@ -50,7 +50,7 @@ ENV DEBIAN_FRONTEND=${DEBIAN_FRONTEND} \
     USER=${USER} \
     WORKDIR=${WORKDIR} 
 
-ENV TRANSMISSION_VERSION=3.00-2.1+deb12u1 \
+ENV TRANSMISSION_VERSION=4.1.0~beta2+dfsg-3+deb13u1 \
     PEER_PORT= \
     RPC_PORT= \
     RPC_USER="" \
