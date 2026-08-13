@@ -17,7 +17,7 @@ ARG BUILDTIME \
     PUID=0 \
     USER=root \
     WORKDIR=/root \
-    TRANSMISSION_VERSION="4.0.6*"
+    TRANSMISSION_VERSION="4.1.3"
 
 # Standard OCI Metadata (https://github.com/opencontainers/image-spec)
 LABEL org.opencontainers.image.authors="Snowdream Tech" \
@@ -54,8 +54,8 @@ RUN echo "ip_resolve=4" >> /etc/dnf/dnf.conf \
     && dnf -y --allowerasing --setopt=*.skip_if_unavailable=true update \
     && dnf -y --allowerasing --setopt=*.skip_if_unavailable=true install --enablerepo=crb epel-release \
     && dnf -y --allowerasing --setopt=*.skip_if_unavailable=true install --enablerepo=crb \
-    transmission-cli-${TRANSMISSION_VERSION}* \
-    transmission-daemon-${TRANSMISSION_VERSION}* \
+    transmission-cli \
+    transmission-daemon \
     && mkdir -p /var/lib/transmission/config/ \
     && mkdir -p /var/lib/transmission/downloads/ \
     && mkdir -p /var/lib/transmission/incomplete/ \

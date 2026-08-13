@@ -18,7 +18,7 @@ ARG BUILDTIME \
     PUID=0 \
     USER=root \
     WORKDIR=/root \
-    TRANSMISSION_VERSION="4.0.6"
+    TRANSMISSION_VERSION="4.1.0~beta2+dfsg-3+deb13u1"
 
 # Standard OCI Metadata (https://github.com/opencontainers/image-spec)
 LABEL org.opencontainers.image.authors="Snowdream Tech" \
@@ -55,8 +55,8 @@ ENV DEBIAN_FRONTEND=${DEBIAN_FRONTEND} \
 RUN set -eux \
     && DEBIAN_FRONTEND=noninteractive apt-get -qqy update \
     && DEBIAN_FRONTEND=noninteractive apt-get -qqy install --no-install-recommends \
-    transmission-cli \
-    transmission-daemon \
+    transmission-cli=${TRANSMISSION_VERSION} \
+    transmission-daemon=${TRANSMISSION_VERSION} \
     && mkdir -p /var/lib/transmission/config/ \
     && mkdir -p /var/lib/transmission/downloads/ \
     && mkdir -p /var/lib/transmission/incomplete/ \
