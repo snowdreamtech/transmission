@@ -51,15 +51,16 @@ ENV KEEPALIVE=${KEEPALIVE} \
     RPC_PASS=""
 
 RUN echo "ip_resolve=4" >> /etc/dnf/dnf.conf \
-    && dnf install -y --enablerepo=crb epel-release \
-    && dnf install -y --enablerepo=crb \
+    && dnf -y --allowerasing --setopt=*.skip_if_unavailable=true update \
+    && dnf -y --allowerasing --setopt=*.skip_if_unavailable=true install --enablerepo=crb epel-release \
+    && dnf -y --allowerasing --setopt=*.skip_if_unavailable=true install --enablerepo=crb \
     transmission-cli-${TRANSMISSION_VERSION}* \
     transmission-daemon-${TRANSMISSION_VERSION}* \
     && mkdir -p /var/lib/transmission/config/ \
     && mkdir -p /var/lib/transmission/downloads/ \
     && mkdir -p /var/lib/transmission/incomplete/ \
     && mkdir -p /var/lib/transmission/torrents/ \
-    && dnf clean all \
+    && dnf -y --allowerasing clean all \
     && rm -rf /var/cache/dnf /tmp/* /var/tmp/*
 
 COPY config /var/lib/transmission/config
