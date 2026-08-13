@@ -23,7 +23,7 @@ ARG BUILDTIME \
 # Standard OCI Metadata (https://github.com/opencontainers/image-spec)
 LABEL org.opencontainers.image.authors="Snowdream Tech" \
     org.opencontainers.image.title="transmission Image Based On debian" \
-    org.opencontainers.image.description="Docker Images for transmission on debian. (i386, amd64, arm32v7, arm64)" \
+    org.opencontainers.image.description="Docker Images for transmission on debian. (amd64, arm32v7, arm64, ppc64le, riscv64, s390x)" \
     org.opencontainers.image.documentation="https://hub.docker.com/r/snowdreamtech/transmission" \
     org.opencontainers.image.base.name="ghcr.io/snowdreamtech/debian:13.6.0" \
     org.opencontainers.image.licenses="MIT" \

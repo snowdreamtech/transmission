@@ -74,21 +74,21 @@ jobs:
       matrix:
         include:
           - variant: alpine
-            version: "3.24.1"
+            version: "4.1.2"
             context: docker/alpine
             platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/riscv64,linux/s390x
             is_latest: false
             package_manager: apk
 
           - variant: debian
-            version: "13.6.0"
+            version: "4.0.6"
             context: docker/debian
-            platforms: linux/386,linux/amd64,linux/arm/v7,linux/arm64
+            platforms: linux/amd64,linux/arm/v7,linux/arm64,linux/riscv64,linux/ppc64le,linux/s390x
             is_latest: true
             package_manager: apt-get
 
           - variant: rocky
-            version: "10.2.0"
+            version: "4.0.6"
             context: docker/rocky
             platforms: linux/amd64,linux/arm64,linux/ppc64le,linux/s390x
             is_latest: false
@@ -261,9 +261,9 @@ jobs:
         uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
         with:
           images: |
-            name=ghcr.io/snowdreamtech/base,enable=true
-            name=snowdreamtech/base,enable=true
-            name=quay.io/snowdreamtech/base,enable=true
+            name=ghcr.io/snowdreamtech/transmission,enable=true
+            name=snowdreamtech/transmission,enable=true
+            name=quay.io/snowdreamtech/transmission,enable=true
           flavor: |
             latest=false
             prefix=
