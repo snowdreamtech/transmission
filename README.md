@@ -63,6 +63,7 @@ docker run -d \
 
 **Base Image**: `ghcr.io/snowdreamtech/alpine:3.24.1`
 
+<!--
 ### Rocky
 
 Enterprise-focused variant based on Rocky Linux, ideal for production environments requiring RHEL compatibility.
@@ -78,6 +79,7 @@ docker run -d \
 **Supported Architectures**: amd64, arm64, ppc64le, s390x
 
 **Base Image**: `ghcr.io/snowdreamtech/rocky:10.2.0`
+-->
 
 ## Build Instructions
 

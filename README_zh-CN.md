@@ -63,6 +63,7 @@ docker run -d \
 
 **基础镜像**：`ghcr.io/snowdreamtech/alpine:3.24.1`
 
+<!--
 ### Rocky
 
 面向企业的变体，基于 Rocky Linux，非常适合需要 RHEL 兼容性的生产环境。
@@ -78,6 +79,7 @@ docker run -d \
 **支持的架构**：amd64、arm64、ppc64le、s390x
 
 **基础镜像**：`ghcr.io/snowdreamtech/rocky:10.2.0`
+-->
 
 ## 构建说明
 
