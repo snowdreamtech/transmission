@@ -51,10 +51,10 @@ ENV KEEPALIVE=${KEEPALIVE} \
     RPC_PASS=""
 
 RUN echo "ip_resolve=4" >> /etc/dnf/dnf.conf \
-    && dnf install -y epel-release \
-    && dnf install -y \
-    transmission-cli \
-    transmission-daemon \
+    && dnf install -y --enablerepo=crb epel-release \
+    && dnf install -y --enablerepo=crb \
+    transmission-cli-${TRANSMISSION_VERSION}* \
+    transmission-daemon-${TRANSMISSION_VERSION}* \
     && mkdir -p /var/lib/transmission/config/ \
     && mkdir -p /var/lib/transmission/downloads/ \
     && mkdir -p /var/lib/transmission/incomplete/ \
