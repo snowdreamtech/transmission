@@ -5,13 +5,13 @@ FROM ghcr.io/snowdreamtech/debian:13.6.0
 
 # Build-time Configuration
 # x-release-please-start-version
-ARG VERSION="13.6.0"
+ARG VERSION="4.1.0"
 # x-release-please-end
 
 ARG BUILDTIME \
     REVISION \
     DEBIAN_FRONTEND=noninteractive \
-    KEEPALIVE=0 \
+    KEEPALIVE=1 \
     CAP_NET_BIND_SERVICE=0 \
     LANG=C.UTF-8 \
     UMASK=022 \
@@ -20,21 +20,22 @@ ARG BUILDTIME \
     PGID=0 \
     PUID=0 \
     USER=root \
-    WORKDIR=/root
+    WORKDIR=/root \
+    TRANSMISSION_VERSION="4.1.0~beta2+dfsg-3+deb13u2"
 
 # Standard OCI Metadata (https://github.com/opencontainers/image-spec)
 LABEL org.opencontainers.image.authors="Snowdream Tech" \
-    org.opencontainers.image.title="Base Image Based On Debian" \
-    org.opencontainers.image.description="Docker Images for Base on Debian. (amd64, arm32v7, arm64, ppc64le, riscv64, s390x)" \
-    org.opencontainers.image.documentation="https://hub.docker.com/r/snowdreamtech/base" \
-    org.opencontainers.image.base.name="snowdreamtech/base:debian" \
+    org.opencontainers.image.title="transmission Image Based On debian" \
+    org.opencontainers.image.description="Docker Images for transmission on debian. (amd64, arm32v7, arm64, ppc64le, riscv64, s390x)" \
+    org.opencontainers.image.documentation="https://hub.docker.com/r/snowdreamtech/transmission" \
+    org.opencontainers.image.base.name="ghcr.io/snowdreamtech/debian:13.6.0" \
     org.opencontainers.image.licenses="MIT" \
-    org.opencontainers.image.source="https://github.com/snowdreamtech/base" \
+    org.opencontainers.image.source="https://github.com/snowdreamtech/transmission" \
     org.opencontainers.image.vendor="Snowdream Tech" \
     org.opencontainers.image.version="${VERSION}" \
     org.opencontainers.image.created="${BUILDTIME}" \
     org.opencontainers.image.revision="${REVISION}" \
-    org.opencontainers.image.url="https://github.com/snowdreamtech/base"
+    org.opencontainers.image.url="https://github.com/snowdreamtech/transmission"
 
 # Runtime Environment Configuration
 ENV DEBIAN_FRONTEND=${DEBIAN_FRONTEND} \
@@ -47,23 +48,36 @@ ENV DEBIAN_FRONTEND=${DEBIAN_FRONTEND} \
     PGID=${PGID} \
     PUID=${PUID} \
     USER=${USER} \
-    WORKDIR=${WORKDIR}
+    WORKDIR=${WORKDIR} \
+    TRANSMISSION_VERSION=${TRANSMISSION_VERSION} \
+    PEER_PORT=51413 \
+    RPC_PORT=9091 \
+    RPC_USER="" \
+    RPC_PASS=""
 
-# Additional tooling and configuration for Base image
 RUN set -eux \
     && DEBIAN_FRONTEND=noninteractive apt-get -qqy update \
     && DEBIAN_FRONTEND=noninteractive apt-get -qqy install --no-install-recommends \
-    vim \
+    transmission-cli=${TRANSMISSION_VERSION} \
+    transmission-daemon=${TRANSMISSION_VERSION} \
+    && mkdir -p /var/lib/transmission/config/ \
+    && mkdir -p /var/lib/transmission/downloads/ \
+    && mkdir -p /var/lib/transmission/incomplete/ \
+    && mkdir -p /var/lib/transmission/torrents/ \
     && DEBIAN_FRONTEND=noninteractive apt-get -qqy --purge autoremove \
     && DEBIAN_FRONTEND=noninteractive apt-get -qqy clean \
     && rm -rf /var/lib/apt/lists/* \
     && rm -rf /tmp/* \
     && rm -rf /var/tmp/*
 
+COPY config /var/lib/transmission/config
+
 # Container Orchestration Files
 COPY entrypoint.d /usr/local/bin/entrypoint.d
 
 RUN chmod +x /usr/local/bin/entrypoint.d/*
+
+EXPOSE 9091 51413/tcp 51413/udp
 
 # Standard Healthcheck (Verification of core system responsiveness)
 HEALTHCHECK NONE

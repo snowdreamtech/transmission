@@ -5,12 +5,12 @@ FROM ghcr.io/snowdreamtech/rocky:10.2.0
 
 # Build-time Configuration
 # x-release-please-start-version
-ARG VERSION="10.2.0"
+ARG VERSION="4.1.4"
 # x-release-please-end
 
 ARG BUILDTIME \
     REVISION \
-    KEEPALIVE=0 \
+    KEEPALIVE=1 \
     CAP_NET_BIND_SERVICE=0 \
     LANG=C.UTF-8 \
     UMASK=022 \
@@ -19,21 +19,22 @@ ARG BUILDTIME \
     PGID=0 \
     PUID=0 \
     USER=root \
-    WORKDIR=/root
+    WORKDIR=/root \
+    TRANSMISSION_VERSION="4.1.4"
 
 # Standard OCI Metadata (https://github.com/opencontainers/image-spec)
 LABEL org.opencontainers.image.authors="Snowdream Tech" \
-    org.opencontainers.image.title="Base Image Based On Rocky" \
-    org.opencontainers.image.description="Docker Images for Base on Rocky. (amd64, arm64, ppc64le, s390x)" \
-    org.opencontainers.image.documentation="https://hub.docker.com/r/snowdreamtech/base" \
-    org.opencontainers.image.base.name="snowdreamtech/base:rocky" \
+    org.opencontainers.image.title="transmission Image Based On rocky" \
+    org.opencontainers.image.description="Docker Images for transmission on rocky. (amd64, arm64, ppc64le, s390x)" \
+    org.opencontainers.image.documentation="https://hub.docker.com/r/snowdreamtech/transmission" \
+    org.opencontainers.image.base.name="ghcr.io/snowdreamtech/rocky:10.2.0" \
     org.opencontainers.image.licenses="MIT" \
-    org.opencontainers.image.source="https://github.com/snowdreamtech/base" \
+    org.opencontainers.image.source="https://github.com/snowdreamtech/transmission" \
     org.opencontainers.image.vendor="Snowdream Tech" \
     org.opencontainers.image.version="${VERSION}" \
     org.opencontainers.image.created="${BUILDTIME}" \
     org.opencontainers.image.revision="${REVISION}" \
-    org.opencontainers.image.url="https://github.com/snowdreamtech/base"
+    org.opencontainers.image.url="https://github.com/snowdreamtech/transmission"
 
 # Runtime Environment Configuration
 ENV KEEPALIVE=${KEEPALIVE} \
@@ -45,23 +46,34 @@ ENV KEEPALIVE=${KEEPALIVE} \
     PGID=${PGID} \
     PUID=${PUID} \
     USER=${USER} \
-    WORKDIR=${WORKDIR}
+    WORKDIR=${WORKDIR} \
+    TRANSMISSION_VERSION=${TRANSMISSION_VERSION} \
+    PEER_PORT=51413 \
+    RPC_PORT=9091 \
+    RPC_USER="" \
+    RPC_PASS=""
 
-# Additional tooling and configuration for Base image
-RUN set -eux \
+RUN echo "ip_resolve=4" >> /etc/dnf/dnf.conf \
     && dnf -y --allowerasing --setopt=*.skip_if_unavailable=true update \
-    && dnf -y --allowerasing --setopt=*.skip_if_unavailable=true install \
-    vim-enhanced \
-    && dnf -y --allowerasing autoremove \
+    && dnf -y --allowerasing --setopt=*.skip_if_unavailable=true install --enablerepo=crb epel-release \
+    && dnf -y --allowerasing --setopt=*.skip_if_unavailable=true install --enablerepo=crb \
+    transmission-cli-${TRANSMISSION_VERSION}* \
+    transmission-daemon-${TRANSMISSION_VERSION}* \
+    && mkdir -p /var/lib/transmission/config/ \
+    && mkdir -p /var/lib/transmission/downloads/ \
+    && mkdir -p /var/lib/transmission/incomplete/ \
+    && mkdir -p /var/lib/transmission/torrents/ \
     && dnf -y --allowerasing clean all \
-    && rm -rf /var/cache/dnf \
-    && rm -rf /tmp/* \
-    && rm -rf /var/tmp/*
+    && rm -rf /var/cache/dnf /tmp/* /var/tmp/*
+
+COPY config /var/lib/transmission/config
 
 # Container Orchestration Files
 COPY entrypoint.d /usr/local/bin/entrypoint.d
 
 RUN chmod +x /usr/local/bin/entrypoint.d/*
+
+EXPOSE 9091 51413/tcp 51413/udp
 
 # Standard Healthcheck (Verification of core system responsiveness)
 HEALTHCHECK NONE
